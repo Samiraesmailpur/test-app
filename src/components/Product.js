@@ -5,14 +5,17 @@ import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Product = () => {
     const { asin } = useParams();
     const [product, setProduct] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchProduct = async () => {
             try {
+                setLoading(true);
                 const response = await fetch("/products.json");
                 if (!response.ok) {
                     throw new Error("Failed to fetch product");
@@ -22,16 +25,26 @@ const Product = () => {
                 setProduct(foundProduct);
             } catch (error) {
                 console.error("Error fetching product:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchProduct();
     }, [asin]);
 
+    if (loading) {
+        return (
+            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+                <CircularProgress />
+            </Box>
+        );
+    }
+
     if (!product) {
         return (
             <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
-                <Typography variant="h6">Loading...</Typography>
+                <Typography variant="h6">Product not found</Typography>
             </Box>
         );
     }
