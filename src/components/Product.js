@@ -1,5 +1,8 @@
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchProductByAsin } from "../store/products/productsActions";
+
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
@@ -9,29 +12,14 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 const Product = () => {
     const { asin } = useParams();
-    const [product, setProduct] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const dispatch = useDispatch();
+    const { product, loading } = useSelector((state) => state.products);
+
 
     useEffect(() => {
-        const fetchProduct = async () => {
-            try {
-                setLoading(true);
-                const response = await fetch("/products.json");
-                if (!response.ok) {
-                    throw new Error("Failed to fetch product");
-                }
-                const data = await response.json();
-                const foundProduct = data.products.find(p => p.asin === asin);
-                setProduct(foundProduct);
-            } catch (error) {
-                console.error("Error fetching product:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
+        dispatch(fetchProductByAsin(asin));
+    }, [asin, dispatch]);
 
-        fetchProduct();
-    }, [asin]);
 
     if (loading) {
         return (

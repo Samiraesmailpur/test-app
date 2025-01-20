@@ -4,9 +4,12 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useSearchParams } from "react-router-dom";
 
+import { useTranslation } from 'react-i18next';
+
 const SearchProducts = ({ onSearch }) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const queryParam = searchParams.get("name") || "";
+    const { t } = useTranslation();
 
     const formik = useFormik({
         initialValues: {
@@ -46,7 +49,7 @@ const SearchProducts = ({ onSearch }) => {
                 <Box sx={{ display: "flex", flexDirection: "column", width: 300 }}>
                     <TextField
                         id="outlined-basic"
-                        label="Search"
+                        label={t("Search")}
                         variant="outlined"
                         type="text"
                         name="name"

@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchProducts } from "../store/products/productsActions";
+import { useTranslation } from 'react-i18next';
 
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
@@ -15,12 +18,13 @@ import SearchProducts from "./SearchProducts";
 import SelectCategory from "./SelectCategory";
 
 
-
 const Products = () => {
-    const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState('');
+    const { t } = useTranslation();
+    const dispatch = useDispatch();
+    const { products, loading } = useSelector((state) => state.products);
+
 
     const filteredProducts = products.filter((product) => {
         const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -28,26 +32,10 @@ const Products = () => {
         return matchesSearch && matchesCategory;
     });
 
+
     useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                setLoading(true);
-                const response = await fetch("/products.json");
-                if (!response.ok) {
-                    throw new Error("Failed to fetch products");
-                }
-                const data = await response.json();
-                setProducts(data.products);
-            } catch (error) {
-                console.error("Error fetching products:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchProducts();
-    }, []);
-
+        dispatch(fetchProducts());
+    }, [dispatch]);
 
 
     if (loading) {
@@ -96,7 +84,7 @@ const Products = () => {
                                             color="primary"
                                             sx={{ marginTop: 1 }}
                                         >
-                                            View Product
+                                            {t("View")}
                                         </Button>
                                     </Link>
                                 </CardContent>
