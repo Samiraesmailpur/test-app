@@ -1,7 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchProductByAsin } from "../store/products/productsActions";
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -17,7 +16,7 @@ const Product = () => {
 
 
     useEffect(() => {
-        dispatch(fetchProductByAsin(asin));
+        dispatch({ type: "PRODUCT_FETCH_REQUESTED", payload: asin });
     }, [asin, dispatch]);
 
 

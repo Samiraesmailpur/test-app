@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchProducts } from "../store/products/productsActions";
 import { useTranslation } from 'react-i18next';
 
 import Box from "@mui/material/Box";
@@ -34,7 +33,7 @@ const Products = () => {
 
 
     useEffect(() => {
-        dispatch(fetchProducts());
+        dispatch({ type: "PRODUCTS_FETCH_REQUESTED" });
     }, [dispatch]);
 
 
