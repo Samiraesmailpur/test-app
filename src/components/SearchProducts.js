@@ -1,11 +1,10 @@
 import { useEffect } from "react";
-import { Box, TextField, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from "yup";
 import { useSearchParams } from "react-router-dom";
-
 import { useTranslation } from 'react-i18next';
+
 
 const SearchProducts = ({ onSearch }) => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -17,6 +16,17 @@ const SearchProducts = ({ onSearch }) => {
         onSearch(values.name);
         setSearchParams({ ...Object.fromEntries(searchParams), name: values.name });
     };
+
+    const handleChange = (e) => {
+        const params = new URLSearchParams(searchParams);
+        console.log(params);
+        if (e.target.value === "") {
+            params.delete('name');
+            onSearch(e.target.value);
+        }
+        setSearchParams(params);
+    };
+
 
 
     const schema = Yup.object({
@@ -45,34 +55,27 @@ const SearchProducts = ({ onSearch }) => {
     }, [queryParam, onSearch]);
 
     return (
-        <Box
-            sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginBottom: 4,
-            }}
+        <div
+            className='flex align-center justify-center mb-3'
         >
             <form onSubmit={handleSubmit(onSubmit)}>
-                <Box sx={{ display: "flex", flexDirection: "column", width: 300 }}>
-                    <TextField
-                        id="outlined-basic"
-                        label={t("Search")}
-                        variant="outlined"
+                <div className='flex flex-col w-[300px]'>
+                    <input
+                        className='w-full rounded-lg py-4 px-3.5 border-[#c7c7c9] border focus:outline-none'
                         type="text"
                         name="name"
-                        {...register("name")}
-                        sx={{
-                            width: "100%",
-                            borderRadius: "8px",
-                        }}
+                        placeholder={t("Search")}
+                        onChange={(e) => handleChange(e)}
+                        {...register("name", {
+                            onChange: (e) => handleChange(e)
+                        })}
                     />
-                    <Typography sx={{ color: "red", marginTop: 1 }} variant="body2">
+                    <p className='text-red-700'>
                         {errors.name?.message}
-                    </Typography>
-                </Box>
+                    </p>
+                </div>
             </form>
-        </Box>
+        </div>
     );
 };
 

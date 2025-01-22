@@ -1,17 +1,11 @@
-import { createStore, applyMiddleware, combineReducers } from "redux";
-import createSagaMiddleware from "redux-saga";
-import { productsReducer } from "./products/productsReducer";
-import productsSaga from "./products/productsSaga";
+import { configureStore } from "@reduxjs/toolkit";
+import { productsReducer } from "./products/productsSlice";
 
-const sagaMiddleware = createSagaMiddleware();
 
-const rootReducer = combineReducers({
-    products: productsReducer,
+const store = configureStore({
+    reducer: {
+        products: productsReducer,
+    },
 });
-
-const store = createStore(rootReducer, applyMiddleware(sagaMiddleware));
-
-// Запуск саги
-sagaMiddleware.run(productsSaga);
 
 export default store;

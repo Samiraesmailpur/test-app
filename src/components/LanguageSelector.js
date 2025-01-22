@@ -9,10 +9,17 @@ const LanguageSelector = () => {
     };
 
     return (
-        <div>
-            <button onClick={() => changeLanguage("en")}>EN</button>
-            <button onClick={() => changeLanguage("ua")}>UA</button>
+        <div className="relative inline-block">
+            <select
+                className="bg-transparent text-white border border-white rounded px-2 py-1 focus:outline-none hover:bg-[#ffffff14]"
+                onChange={(e) => changeLanguage(e.target.value)}
+                defaultValue="en"
+            >
+                <option value="en" className="bg-gray-800 text-white">EN</option>
+                <option value="ua" className="bg-gray-800 text-white">UA</option>
+            </select>
         </div>
+
     );
 }
 

@@ -1,17 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { getProducts } from "../store/products/productsOperations";
 import { useTranslation } from 'react-i18next';
-
-import Box from "@mui/material/Box";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import Typography from "@mui/material/Typography";
-import CircularProgress from '@mui/material/CircularProgress';
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
 
 import SearchProducts from "./SearchProducts";
 import SelectCategory from "./SelectCategory";
@@ -33,66 +24,46 @@ const Products = () => {
 
 
     useEffect(() => {
-        dispatch({ type: "PRODUCTS_FETCH_REQUESTED" });
+        dispatch(getProducts());
     }, [dispatch]);
 
 
     if (loading) {
         return (
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: "100vh",
-                }}
-            >
-                <CircularProgress disableShrink />
-            </Box>
+            <div className='flex justify-center items-center h-screen'>
+                <p>Loading...</p>
+            </div>
         );
     }
 
     return (
-        <Box sx={{ maxWidth: 800, margin: "auto", padding: 2 }}>
-            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "baseline" }}>
-                <SearchProducts onSearch={(query) => setSearchQuery(query)} />
+        <div className="container">
+            <div className="flex justify-center items-baseline gap-3 mb-4 pt-4">
+                <SearchProducts onSearch={(query) => setSearchQuery(query)}/>
                 <SelectCategory products={products} onSelectCategory={(category) => setSelectedCategory(category)}/>
-            </Box>
-            <List>
+            </div>
+            <div className="space-y-4">
                 {filteredProducts.map((product) => (
-                    <ListItem key={product.asin} sx={{ marginBottom: 2 }}>
-                        <Card sx={{ display: "flex", width: "100%" }}>
-                            <CardMedia
-                                component="img"
-                                sx={{ width: 150, objectFit: "contain" }}
-                                image={product.img}
-                                alt={product.name}
-                            />
-                            <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
-                                <CardContent>
-                                    <Typography variant="h6">{product.name}</Typography>
-                                    <Typography variant="body1" color="text.secondary">
-                                        Price: ${product.price}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Category: {product.bsr_category}
-                                    </Typography>
-                                    <Link to={`/product/${product.asin}`}>
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            sx={{ marginTop: 1 }}
-                                        >
-                                            {t("View")}
-                                        </Button>
-                                    </Link>
-                                </CardContent>
-                            </Box>
-                        </Card>
-                    </ListItem>
+                    <div key={product.asin} className="flex bg-white shadow-md rounded-lg p-4">
+                        <img
+                            src={product.img}
+                            alt={product.name}
+                            className="w-36 h-36 object-contain mr-4"
+                        />
+                        <div className="flex flex-col flex-grow">
+                            <div className="text-lg font-semibold">{product.name}</div>
+                            <div className="text-sm text-gray-600">Price: ${product.price}</div>
+                            <div className="text-sm text-gray-600">Category: {product.bsr_category}</div>
+                            <Link to={`/product/${product.asin}`} className="mt-2">
+                                <button className="bg-[#1976d2] text-white py-2 px-4 rounded hover:bg-[#186bbd  ]">
+                                    {t("View")}
+                                </button>
+                            </Link>
+                        </div>
+                    </div>
                 ))}
-            </List>
-        </Box>
+            </div>
+        </div>
     );
 };
 
