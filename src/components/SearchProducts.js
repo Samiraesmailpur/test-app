@@ -19,7 +19,6 @@ const SearchProducts = ({ onSearch }) => {
 
     const handleChange = (e) => {
         const params = new URLSearchParams(searchParams);
-        console.log(params);
         if (e.target.value === "") {
             params.delete('name');
             onSearch(e.target.value);
